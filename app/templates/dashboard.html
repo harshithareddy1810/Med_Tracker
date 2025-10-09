@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Welcome, {{ current_user.mobile_number }}</h1>
+        <a href="{{ url_for('main.logout') }}" class="btn btn-outline-secondary">Logout</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Add a New Medicine
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('main.add_medicine') }}" method="POST">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="name" class="form-label">Medicine Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dosage" class="form-label">Dosage</label>
+                        <input type="text" name="dosage" class="form-control" placeholder="e.g., 500mg" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">Times & Days</label>
+                        <div id="time-inputs">
+                            <div class="time-entry mb-3">
+                                <input type="time" name="times[]" class="form-control mb-2" required>
+                                <div class="day-selector">
+                                    <input type="checkbox" class="btn-check" id="days_0_mon" name="days_0_mon" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_mon">M</label>
+
+                                    <input type="checkbox" class="btn-check" id="days_0_tue" name="days_0_tue" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_tue">T</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_0_wed" name="days_0_wed" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_wed">W</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_0_thu" name="days_0_thu" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_thu">T</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_0_fri" name="days_0_fri" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_fri">F</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_0_sat" name="days_0_sat" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_sat">S</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_0_sun" name="days_0_sun" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm" for="days_0_sun">S</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTimeInput()">+ Add Another Time</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Save Medicine</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="h4">Your Medications</h2>
+    <div class="row">
+        {% for med in medicines %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ med.name }} <span class="text-muted fs-6">({{ med.dosage }})</span></h5>
+                    <p class="card-text">Scheduled Times:</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        {% for schedule in med.schedules %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ schedule.time_to_take.strftime('%I:%M %p') }}
+                            <small class="text-muted">{{ schedule.get_active_days() }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('main.edit_medicine', med_id=med.id) }}" class="btn btn-sm btn-secondary me-2">Edit</a>
+                    <form action="{{ url_for('main.delete_medicine', med_id=med.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>You have not added any medicines yet.</p>
+        {% endfor %}
+    </div>
+
+    <hr class="my-4">
+
+    <h2 class="h4">Medication History</h2>
+    {% if logs %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Medicine</th>
+                    <th>Dosage</th>
+                    <th>Status</th>
+                    <th>Time Logged</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log, schedule, medicine in logs %}
+                <tr>
+                    <td>{{ medicine.name }}</td>
+                    <td>{{ medicine.dosage }}</td>
+                    <td>
+                        {% if log.status == 'Taken' %}
+                            <span class="badge bg-success">Taken</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Missed</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ log.date_taken.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No medication history yet. Once you take a medicine, it will be logged here.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1 class="h3">Edit Medicine</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('main.edit_medicine', med_id=medicine.id) }}" method="POST">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="name" class="form-label">Medicine Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ medicine.name }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dosage" class="form-label">Dosage</label>
+                        <input type="text" name="dosage" class="form-control" value="{{ medicine.dosage }}" required>
+                    </div>
+                    <!-- <div class="col-md-5">
+                        <label class="form-label">Times to take</label>
+                        <div id="time-inputs">
+                            {% for schedule in medicine.schedules %}
+                            <input type="time" name="times[]" class="form-control mb-2" value="{{ schedule.time_to_take.strftime('%H:%M') }}" required>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTimeInput()">+ Add Another Time</button>
+                    </div> -->
+                    <div class="col-md-5">
+                        <label class="form-label">Times & Days</label>
+                        <div id="time-inputs">
+                            {% for schedule in medicine.schedules %}
+                            <div class="time-entry mb-3">
+                                <input type="time" name="times[]" class="form-control mb-2" value="{{ schedule.time_to_take.strftime('%H:%M') }}" required>
+                                <div class="day-selector">
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_mon" name="days_{{loop.index0}}_mon" {% if schedule.on_monday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_mon">M</label>
+
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_tue" name="days_{{loop.index0}}_tue" {% if schedule.on_tuesday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_tue">T</label>
+
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_wed" name="days_{{loop.index0}}_wed" {% if schedule.on_wednesday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_wed">W</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_thu" name="days_{{loop.index0}}_thu" {% if schedule.on_thursday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_thu">T</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_fri" name="days_{{loop.index0}}_fri" {% if schedule.on_friday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_fri">F</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_sat" name="days_{{loop.index0}}_sat" {% if schedule.on_saturday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_sat">S</label>
+                                    
+                                    <input type="checkbox" class="btn-check" id="days_{{loop.index0}}_sun" name="days_{{loop.index0}}_sun" {% if schedule.on_sunday %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary btn-sm" for="days_{{loop.index0}}_sun">S</label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTimeInput()">+ Add Another Time</button>
+                    </div>
+                </div>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mt-3">Cancel</a>
+                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
