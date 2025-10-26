@@ -1,3 +1,8 @@
+Flask==3.1.1
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+python-dotenv==1.1.1
+twilio==9.8.3
 # absl-py==2.3.1
 # aext-assistant @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_24994515xd/croot/aext-assistant_1717062163042/work
 # aext-assistant-server @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_4boob09gv8/croot/aext-assistant-server_1717059973985/work
@@ -476,8 +481,3 @@
 # zipp==3.23.0
 # zope.interface @ file:///Users/ec2-user/ci_py311/zope.interface_1678379536727/work
 # zstandard @ file:///Users/ec2-user/ci_py311_2/zstandard_1679338593428/work
-Flask==3.1.1
-Flask-Login==0.6.3
-Flask-SQLAlchemy==3.1.1
-python-dotenv==1.1.1
-twilio==9.8.3
